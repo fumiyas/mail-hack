@@ -1,12 +1,23 @@
 #!/bin/ksh
 ##
 ## OpenLDAP: Append `git log -p COMMIT~..COMMIT` to an OpenLDAP commit message
-## Copyright (c) 2012 SATOH Fumiyasu @ OSS Technology Corp., Japan
+## Copyright (c) 2012-2013 SATOH Fumiyasu @ OSS Technology Corp., Japan
 ##
 ## License: GNU General Public License version 3 or later
 ##
 
-## Example: In your maildropfilter(7):
+## Installation instructions for Courier maildrop(1):
+##
+## (1) Checkout OpenLDAP git repository into your $HOME/git/openldap
+##
+##     $ cd
+##     $ mkdir git
+##     $ cd git
+##     $ git clone git://git.OpenLDAP.org/openldap.git
+##
+## (2) Put this script into your $HOME/bin/openldap-commitmail-adjust
+##
+## (3) Put the following lines into your maildrop(1) maildropfilter(7):
 ##
 ## if (/^From: openldap-commit2devel@OpenLDAP.org/ && /^Subject: openldap\.git /)
 ## {
