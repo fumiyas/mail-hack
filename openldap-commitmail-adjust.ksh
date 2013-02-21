@@ -8,16 +8,20 @@
 
 ## Installation instructions for Courier maildrop(1):
 ##
-## (1) Checkout OpenLDAP git repository into your $HOME/git/openldap
+## (1) Subscribe to the openldap-commit mailing list
+##
+##     http://www.openldap.org/lists/mm/listinfo/openldap-commit
+##
+## (2) Checkout OpenLDAP git repository into your $HOME/git/openldap
 ##
 ##     $ cd
 ##     $ mkdir git
 ##     $ cd git
 ##     $ git clone git://git.OpenLDAP.org/openldap.git
 ##
-## (2) Put this script into your $HOME/bin/openldap-commitmail-adjust
+## (3) Put this script into your $HOME/bin/openldap-commitmail-adjust
 ##
-## (3) Put the following lines into your maildrop(1) maildropfilter(7):
+## (4) Put the following lines into your maildrop(1) maildropfilter(7):
 ##
 ## if (/^From: openldap-commit2devel@OpenLDAP.org/ && /^Subject: openldap\.git /)
 ## {
