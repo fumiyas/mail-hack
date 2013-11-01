@@ -100,6 +100,9 @@ case "$file_type1" in
     ;;
   application)
     case "$file_type2" in
+      x-zip-compressed)
+	file_ext="zip"
+	;;
       pdf|x-pdf)
 	file_ext="pdf"
 	;;
@@ -151,7 +154,7 @@ case "$file_ext" in
     unzip -l /dev/stdin |sed '1,3d;/^-/d;$d'
     ;;
   o[dt][tspg])
-    odf2text "$file_tmp"
+    odf2text /dev/stdin
     ;;
   pdf)
     file_tmp=`mktemp` || exit 1
