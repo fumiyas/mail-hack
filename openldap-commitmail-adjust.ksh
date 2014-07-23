@@ -1,7 +1,7 @@
 #!/bin/ksh
 ##
 ## OpenLDAP: Append `git log -p COMMIT~..COMMIT` to an OpenLDAP commit message
-## Copyright (c) 2012-2013 SATOH Fumiyasu @ OSS Technology Corp., Japan
+## Copyright (c) 2012-2014 SATOH Fumiyasu @ OSS Technology Corp., Japan
 ##
 ## License: GNU General Public License version 3 or later
 ##
@@ -36,6 +36,7 @@ builtin emulate -R ksh 2>/dev/null
 
 set -u
 
+gitweb="http://www.openldap.org/devel/gitweb.cgi?p=openldap.git"
 boundary="--------------boundary_$$_$RANDOM"
 
 typeset -A commits
@@ -62,25 +63,26 @@ echo "Content-Transfer-Encoding: 8bit"
 echo
 
 while IFS= read -r line; do
-  #if [[ $line = @(- Log -*) ]]; then
-  #  echo "$line"
-  #  break
-  #fi
+  echo "$line"
+
+  if [[ $line == "- Log -"* ]]; then
+    break
+  fi
 
   echo "$line" |read -r via commit garbage
   if [[ $via = "via" ]]; then
     commits[${#commits[@]}]="$commit"
   fi
-
-  echo "$line"
 done
 
+sed \
+  -e "s#^commit #$gitweb;h=#" \
+;
+
 if [[ ${#commits[@]} -eq 0 ]]; then
-  cat
   exit 0
 fi
 
-cat >/dev/null
 for commit in "${commits[@]}"; do
   echo "--$boundary"
   echo "Content-Type: text/plain; charset=UTF-8"
