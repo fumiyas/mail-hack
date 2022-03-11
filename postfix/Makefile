@@ -31,8 +31,13 @@ Makefile.postmap: Makefile main.cf
 	echo 'POSTMAP=$(POSTMAP)' >>"$$tmp"; \
 	echo '.PHONY: db' >>"$$tmp"; \
 	echo 'db::' >>"$$tmp"; \
-	{ $(POSTCONF) -c $(POSTFIX_CONFIG_DIR) -h || kill $$$$; } \
-	|sed -n 's/, */ /g; /hash:/p' \
+	{ $(POSTCONF) -c $(POSTFIX_CONFIG_DIR) || kill $$$$; } \
+	|sed -n \
+	  -e '/^alias_database = /d' \
+	  -e '/^alias_maps = /d' \
+	  -e 's/^[^=]*= *//' \
+	  -e 's/, */ /g' \
+	  -e '/hash:/p' \
 	|tr ' ' '\n' \
 	|sed -n \
 	  -e 's#^hash:\$$config_directory/#$(POSTFIX_CONFIG_DIR)/#p' \
