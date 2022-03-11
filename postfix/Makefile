@@ -1,8 +1,8 @@
 #!/usr/bin/make -f
 ##
-## Postfix: Makefile to update *.db files
+## Postfix: Makefile for updating *.db files
 ##
-## Copyright (c) 2014 SATOH Fumiyasu @ OSS Technology Corp., Japan
+## Copyright (c) 2014-2022 SATOH Fumiyasu @ OSSTech Corp., Japan
 ##               <https://github.com/fumiyas/mail-filters/blob/master/postfix/Makefile>
 ##               <https://fumiyas.github.io/>
 ##
@@ -45,4 +45,3 @@ Makefile.postmap: Makefile main.cf
 	done \
 	>>"$$tmp"; \
 	mv "$$tmp" $@
-
