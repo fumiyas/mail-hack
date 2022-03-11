@@ -13,13 +13,13 @@ POSTFIX_CONFIG_DIR=	/etc/postfix
 POSTCONF=		/usr/sbin/postconf
 POSTMAP=		/usr/sbin/postmap
 
+.PHONY: default
 default:
 	@cd $(POSTFIX_CONFIG_DIR) && $(MAKE) db
 
-.PHONY: default db
-
+.PHONY: db
 db: Makefile.postmap
-	@echo 'Updating *.db files ...'
+	@echo 'Updating $(POSTFIX_CONFIG_DIR)/*.db files ...'
 	@$(MAKE) -f $(POSTFIX_CONFIG_DIR)/Makefile.postmap
 
 Makefile.postmap: Makefile main.cf
