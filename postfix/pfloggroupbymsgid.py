@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 ## -*- coding: utf-8 -*- vim:shiftwidth=4:expandtab:
 ##
 ## Postfix: Group Postfix log by Message-Id
