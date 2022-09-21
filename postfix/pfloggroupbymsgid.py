@@ -35,10 +35,10 @@ for line in sys.stdin:
     qid = m.group('qid')
     log = {
         'line': line,
-        'pid':  m.group('pid'),
-        'qid':  qid,
-        'service':  m.group('service'),
-        'content':  m.group('content'),
+        'pid': m.group('pid'),
+        'qid': qid,
+        'service': m.group('service'),
+        'content': m.group('content'),
     }
 
     logs_by_qid.setdefault(qid, []).append(log)
