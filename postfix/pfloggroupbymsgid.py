@@ -14,8 +14,8 @@ import re
 from collections import OrderedDict
 
 log_re = re.compile(
-  r'^.* postfix/(?P<service>[a-z]+)\[(?P<pid>[0-9]+)\]: '
-  r'((?P<qid>[0-9A-F]+): )(?P<content>.*)$'
+    r'^.* postfix/(?P<service>[a-z]+)\[(?P<pid>[0-9]+)\]: '
+    r'((?P<qid>[0-9A-F]{6,}|[0-9B-DF-HJ-NP-TV-Zb-df-hj-np-tv-y]{10,}z[0-9B-DF-HJ-NP-TV-Zb-df-hj-np-tv-y]+): )(?P<content>.*)$'
 )
 log_cleanup_msgid_re = re.compile(r'^message-id=<(?P<msgid>.*?)>$')
 
