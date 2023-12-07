@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 ## -*- coding: utf-8 -*- vim:shiftwidth=4:expandtab:
 ##
-## Postfix: Group Postfix log by Message-Id
+## Postfix: Group Postfix log by Message-ID
 ## Copyright (c) 2018 SATOH Fumiyasu @ OSS Technology Crop., Japan
 ##
 ## License: GNU General Public License version 3 or later
@@ -59,8 +59,8 @@ for line in sys.stdin:
 
 ## FIXME: Print pending queue logs
 for msgid, logs_list in logs_list_by_msgid.items():
-    print('Message-Id: <%s>' % (msgid))
+    print('Message-ID: <%s>' % (msgid))
     for logs in logs_list:
-        print('  Queue Id:', logs[0]['qid'])
+        print('  Queue ID:', logs[0]['qid'])
         for log in logs:
             print('    ', log['line'])
