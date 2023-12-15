@@ -1,8 +1,8 @@
 #!/usr/bin/make -f
 ##
-## Postfix: Makefile for updating *.db files
+## Postfix: Makefile for updating database files
 ##
-## Copyright (c) 2014-2022 SATOH Fumiyasu @ OSSTech Corp., Japan
+## Copyright (c) 2014-2023 SATOH Fumiyasu @ OSSTech Corp., Japan
 ##               <https://github.com/fumiyas/mail-filters/blob/master/postfix/Makefile>
 ##               <https://fumiyas.github.io/>
 ##
@@ -15,38 +15,43 @@ POSTMAP=		/usr/sbin/postmap
 
 .PHONY: default
 default:
-	@cd $(POSTFIX_CONFIG_DIR) && $(MAKE) db
+	@cd $(POSTFIX_CONFIG_DIR) && $(MAKE) database
 
-.PHONY: db
-db: Makefile.postmap
-	@echo 'Updating $(POSTFIX_CONFIG_DIR)/*.db files ...'
-	@$(MAKE) -f $(POSTFIX_CONFIG_DIR)/Makefile.postmap
+.PHONY: database
+database: Makefile.database
+	@echo 'Updating Postfix database files ...'
+	@$(MAKE) -f $(POSTFIX_CONFIG_DIR)/Makefile.database
 
-Makefile.postmap: Makefile main.cf
-	@echo 'Updating $@ ...'
+Makefile.database: Makefile main.cf
+	@echo 'Generating $@ ...'
 	@set -e; \
 	tmp="$@.$$$$.tmp"; \
 	trap 'rm -f "$$tmp"' EXIT; \
 	rm -f "$$tmp"; \
 	echo 'POSTMAP=$(POSTMAP)' >>"$$tmp"; \
-	echo '.PHONY: db' >>"$$tmp"; \
-	echo 'db::' >>"$$tmp"; \
+	echo '.PHONY: database' >>"$$tmp"; \
+	echo 'database::' >>"$$tmp"; \
 	{ $(POSTCONF) -c $(POSTFIX_CONFIG_DIR) || kill $$$$; } \
-	|sed -n \
+	|sed -E -n \
 	  -e '/^alias_database = /d' \
 	  -e '/^alias_maps = /d' \
 	  -e 's/^[^=]*= *//' \
 	  -e 's/, */ /g' \
-	  -e '/hash:/p' \
+	  -e '/(lmdb|hash):/p' \
 	|tr ' ' '\n' \
-	|sed -n \
-	  -e 's#^hash:\$$config_directory/#$(POSTFIX_CONFIG_DIR)/#p' \
-	  -e 's#^hash:$(POSTFIX_CONFIG_DIR)/#$(POSTFIX_CONFIG_DIR)/#p' \
+	|sed -E -n \
+	  -e 's#^(lmdb|hash):\$$config_directory/#\1 $(POSTFIX_CONFIG_DIR)/#p' \
+	  -e 's#^(lmdb|hash):$(POSTFIX_CONFIG_DIR)/#\1 $(POSTFIX_CONFIG_DIR)/#p' \
 	|sort -u \
-	|while read mapfile; do \
-	  echo "db:: $$mapfile.db"; \
-	  echo "$$mapfile.db: $$mapfile"; \
-	  echo "	\$$(POSTMAP) $$mapfile"; \
+	|while read type src; do \
+	  if [ "$$type" = "hash" ]; then \
+	    dst="$$src.db"; \
+	  else \
+	    dst="$$src.$$type"; \
+	  fi; \
+	  echo "database:: $$dst"; \
+	  echo "$$dst: $$src"; \
+	  echo "	\$$(POSTMAP) $$type:$$src"; \
 	done \
 	>>"$$tmp"; \
 	mv "$$tmp" $@
