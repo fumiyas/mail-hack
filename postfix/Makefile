@@ -33,15 +33,13 @@ Makefile.database: Makefile main.cf
 	echo 'database::' >>"$$tmp"; \
 	{ $(POSTCONF) -c $(POSTFIX_CONFIG_DIR) || kill $$$$; } \
 	|sed -E -n \
-	  -e '/^alias_database = /d' \
-	  -e '/^alias_maps = /d' \
-	  -e 's/^[^=]*= *//' \
+	  -e '/^alias_(database|maps) = /d' \
+	  -e 's/^[^=]+= *//' \
 	  -e 's/, */ /g' \
 	  -e '/(lmdb|hash):/p' \
 	|tr ' ' '\n' \
 	|sed -E -n \
-	  -e 's#^(lmdb|hash):\$$config_directory/#\1 $(POSTFIX_CONFIG_DIR)/#p' \
-	  -e 's#^(lmdb|hash):$(POSTFIX_CONFIG_DIR)/#\1 $(POSTFIX_CONFIG_DIR)/#p' \
+	  -e 's#^(lmdb|hash):(\$$config_directory|$(POSTFIX_CONFIG_DIR))/#\1 $(POSTFIX_CONFIG_DIR)/#p' \
 	|sort -u \
 	|while read type src; do \
 	  if [ "$$type" = "hash" ]; then \
