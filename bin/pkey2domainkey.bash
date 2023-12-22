@@ -10,7 +10,7 @@ set -u
 set -e
 set -o pipefail || exit $?
 
-if tty >/dev/null 2>&1; then
+if [ -t 0 ]; then
   _pdeco_reset=$(tput sgr0)
   _pdeco_info=$(tput setaf 2)
   _pdeco_warn=$(tput setaf 3)
@@ -105,7 +105,7 @@ while [[ $# -gt 0 ]]; do
     ;;
   -d|--description)
     getopts_want_arg "$opt" ${1+"$1"}
-    if ! key_description="$("$python_command" -m quopri -t <<<$1 |tr -d '\n')"; then
+    if ! key_description="$("$python_command" -m quopri -t <<<"$1" |tr -d '\n')"; then
       pdie "Failed to encode description into quoted-printable string: Command failed: $?"
     fi
     shift
