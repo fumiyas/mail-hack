@@ -151,16 +151,15 @@ fi
 
 ## ======================================================================
 
-printf '%s._domainkey.%s.%s IN TXT ( "%s%s%s%s%s%s p="\n' \
-  "$key_selector" \
-  "$key_domain" \
-  "${key_ttl:+ $key_ttl}" \
-  "${key_version:+ v=$key_version;}" \
-  "${key_flags:+ t=$key_flags;}" \
-  "${key_service:+ s=$key_service;}" \
-  "${key_granularity:+ g=$key_granularity;}" \
-  "${key_description:+ n=$key_description;}" \
-  "${key_type:+ k=$key_type;}" \
+echo "$key_selector._domainkey.$key_domain." \
+  ${key_ttl:+"$key_ttl"} \
+  'IN TXT ( "'"v=$key_version;" \
+  ${key_flags:+"t=$key_flags;"} \
+  ${key_service:+"s=$key_service;"} \
+  ${key_granularity:+"g=$key_granularity;"} \
+  ${key_description:+"n=$key_description;"} \
+  ${key_type:+"k=$key_type;"} \
+  'p="' \
 ;
 "$openssl_command" pkey \
   -in "$key_file" \
