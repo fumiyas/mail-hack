@@ -51,7 +51,6 @@ key_service='email'
 key_granularity=''
 key_description=''
 
-# shellcheck disable=SC2317
 getopts_want_arg()
 {
   if [[ $# -lt 2 ]]; then
@@ -135,6 +134,8 @@ key_domain="$1"; shift
 ## ----------------------------------------------------------------------
 
 key_type=$(
+  # shellcheck disable=SC2019 # Use '[:upper:]' to support accents and foreign alphabets
+  # shellcheck disable=SC2018 # Use '[:lower:]' to support accents and foreign alphabets
   "$openssl_command" pkey \
     -in "$key_file" \
     -text \
