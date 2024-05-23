@@ -1,7 +1,7 @@
 #!/bin/sh
 ##
 ## Postfix: Catch all mail messages
-## Copyright (c) 2023 SATOH Fumiyasu @ OSSTech Corp., Japan
+## Copyright (c) 2023-2024 SATOH Fumiyasu @ OSSTech Corp., Japan
 ##
 ## /etc/postfix/main.cf:
 ## transport_maps=hash:$config_directory/transport
@@ -97,15 +97,16 @@ if [ ! -w "$mailbox_dir" ]; then
   pdie "Mailbox directory not writeable: $mailbox_dir" "$EX_NOPERM"
 fi
 
+set -C
 for n in 0 1 2 3 4 5 6 7 8 9 timeout; do
   if [ "$n" = 'timeout' ]; then
     pdie "Failed to determine out filename" "$EX_TEMPFAIL"
   fi
   mail_file="$mailbox_dir/$timestamp.$n.$$.eml"
-  if ( set -C; : >"$mail_file" ); then
+  if : >"$mail_file"; then
     break
   fi
   sleep 1
 done
 
-cat >"$mail_file" || pdie "Failed to save mail message" "$EX_CANTCREAT"
+cat >>"$mail_file" || pdie "Failed to save mail message" "$EX_CANTCREAT"
