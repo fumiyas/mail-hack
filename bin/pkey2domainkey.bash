@@ -88,14 +88,14 @@ while [[ $# -gt 0 ]]; do
     key_ttl="$1"; shift
     ;;
   --version)
-    getopts_want_arg "$opt" ${1+"$1"} ${1+'^[-._0-9A-Za-z]+$'}
+    getopts_want_arg "$opt" ${1+"$1"} ${1+'^[-._0-9A-Za-z]*$'}
     key_version="$1"; shift
     ;;
   -t|--test)
     key_flags="${key_flags:+$key_flags:}y"
     ;;
   -s|--service)
-    getopts_want_arg "$opt" ${1+"$1"} ${1+'^(\*|[-._0-9A-Za-z]+)$'}
+    getopts_want_arg "$opt" ${1+"$1"} ${1+'^(\*|[-._0-9A-Za-z]*)$'}
     key_service="$1"; shift
     ;;
   -g|--granularity)
@@ -151,15 +151,23 @@ fi
 
 ## ======================================================================
 
-echo "$key_selector._domainkey.$key_domain." \
+txt_data_prefix=$(
+  # shellcheck disable=SC2116 # Useless echo?
+  echo \
+    ${key_version:+"v=$key_version;"} \
+    ${key_flags:+"t=$key_flags;"} \
+    ${key_service:+"s=$key_service;"} \
+    ${key_granularity:+"g=$key_granularity;"} \
+    ${key_description:+"n=$key_description;"} \
+    ${key_type:+"k=$key_type;"} \
+    'p=' \
+  ;
+)
+
+echo \
+  "$key_selector._domainkey.$key_domain." \
   ${key_ttl:+"$key_ttl"} \
-  'IN TXT ( "'"v=$key_version;" \
-  ${key_flags:+"t=$key_flags;"} \
-  ${key_service:+"s=$key_service;"} \
-  ${key_granularity:+"g=$key_granularity;"} \
-  ${key_description:+"n=$key_description;"} \
-  ${key_type:+"k=$key_type;"} \
-  'p="' \
+  "IN TXT ( \"$txt_data_prefix\"" \
 ;
 "$openssl_command" pkey \
   -in "$key_file" \
