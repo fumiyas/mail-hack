@@ -1,7 +1,7 @@
 #!/bin/bash
 ##
 ## Generate a DNS TXT record for DomainKeys (DKIM) from a private key file
-## Copyright (c) 2023 SATOH Fumiyasu @ OSSTech Corp., Japan
+## Copyright (c) 2023-2024 SATOH Fumiyasu @ OSSTech Corp., Japan
 ##
 ## License: GNU General Public License version 3
 ##
@@ -95,7 +95,7 @@ while [[ $# -gt 0 ]]; do
     key_flags="${key_flags:+$key_flags:}y"
     ;;
   -s|--service)
-    getopts_want_arg "$opt" ${1+"$1"} ${1+'^[-._0-9A-Za-z]+$'}
+    getopts_want_arg "$opt" ${1+"$1"} ${1+'^(\*|[-._0-9A-Za-z]+)$'}
     key_service="$1"; shift
     ;;
   -g|--granularity)
