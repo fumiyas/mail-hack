@@ -110,4 +110,7 @@ for n in 0 1 2 3 4 5 6 7 8 9 timeout; do
   sleep 1
 done
 
-cat >>"$mail_file" || pdie "Failed to save mail message" "$EX_CANTCREAT"
+if ! cat >>"$mail_file"; then
+  rm "$mail_file"
+  pdie "Failed to save mail message" "$EX_CANTCREAT"
+fi
