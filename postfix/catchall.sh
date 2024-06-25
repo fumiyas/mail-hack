@@ -4,6 +4,7 @@
 ## Copyright (c) 2023-2024 SATOH Fumiyasu @ OSSTech Corp., Japan
 ##
 ## /etc/postfix/main.cf:
+## parent_domain_matches_subdomains=
 ## transport_maps=hash:$config_directory/transport
 ## catchall_destination_recipient_limit=1
 ##
