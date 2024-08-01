@@ -3,7 +3,7 @@
 ## Mail to text translator
 ## Copyright (c) 2013 SATOH Fumiyasu @ OSS Technlogy Corp., Japan
 ##
-## License: GNU General Public License version 3
+## SPDX-License-Identifier: GPL-3.0-or-later
 ##
 ## Required external commands:
 ##   reformime(1) from maildrop

@@ -6,7 +6,7 @@
 ##               <http://www.OSSTech.co.jp/>
 ##
 ## Date: 2013-10-09, since 2013-10-09
-## License: GNU General Public License version 3
+## SPDX-License-Identifier: GPL-3.0-or-later
 ##
 
 ## NOTE: This script supports mbox in mboxo and mboxrd format only.

@@ -5,7 +5,7 @@
 ##               <https://github.com/fumiyas/mail-filters>
 ##               <http://www.OSSTech.co.jp/>
 ##
-## License: GNU General Public License version 2 or later
+## SPDX-License-Identifier: GPL-2.0-or-later
 ## Date: 2007-07-18, since 2004-06-10
 ##
 

@@ -4,7 +4,7 @@
 ## Parse a DSN message in a VERP-ed bounced message and dump to CSV data
 ## Copyright (c) 2018 SATOH Fumiyasu @ OSS Technology Co., Japan
 ##
-## License: GNU General Public License version 3
+## SPDX-License-Identifier: GPL-3.0-or-later
 ##
 
 from __future__ import print_function

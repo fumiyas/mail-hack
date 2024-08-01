@@ -3,7 +3,7 @@
 ## Generate a DNS TXT record for DomainKeys (DKIM) from a private key file
 ## Copyright (c) 2023-2024 SATOH Fumiyasu @ OSSTech Corp., Japan
 ##
-## License: GNU General Public License version 3
+## SPDX-License-Identifier: GPL-3.0-or-later
 ##
 
 set -u

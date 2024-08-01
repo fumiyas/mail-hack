@@ -3,7 +3,7 @@
 ## OpenLDAP: Append `git log -p COMMIT~..COMMIT` to an OpenLDAP commit message
 ## Copyright (c) 2012-2014 SATOH Fumiyasu @ OSS Technology Corp., Japan
 ##
-## License: GNU General Public License version 3 or later
+## SPDX-License-Identifier: GPL-3.0-or-later or later
 ##
 
 ## Installation instructions for Courier maildrop(1):
