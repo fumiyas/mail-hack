@@ -7,8 +7,6 @@
 ## License: GNU General Public License version 3 or later
 ##
 
-from __future__ import print_function
-
 import sys
 import re
 from collections import OrderedDict
