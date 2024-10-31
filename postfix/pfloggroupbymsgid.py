@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 ## -*- coding: utf-8 -*- vim:shiftwidth=4:expandtab:
 ##
-## Postfix: Group Postfix log by Message-ID
-## Copyright (c) 2018 SATOH Fumiyasu @ OSS Technology Crop., Japan
+## Postfix: Group Postfix log by Message-ID: header
 ##
-## License: GNU General Public License version 3 or later
+## SPDX-FileCopyrightText: 2018-2024 SATOH Fumiyasu @ OSSTech Corp., Japan
+## SPDX-License-Identifier: GPL-3.0-or-later
 ##
 
 import sys
