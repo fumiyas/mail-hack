@@ -20,7 +20,7 @@ log_raw_re = re.compile(
     rb'postfix/(?:(?P<service_prefix>[-._0-9a-z]+/)?(?P<service>[-._0-9a-z]+))\[(?P<pid>[0-9]+)\]: '
     rb'(?:(?P<qid>[0-9A-F]{6,}|[0-9B-DF-HJ-NP-TV-Zb-df-hj-np-tv-y]{10,}z[0-9B-DF-HJ-NP-TV-Zb-df-hj-np-tv-y]+): )(?P<content_raw>.*)$'
 )
-log_cleanup_msgid_re = re.compile(r'^message-id=<(?P<msgid>.*?)>$')
+log_cleanup_msgid_re = re.compile(r'^message-id=(?P<msgid><.*?>)$')
 
 logs_by_qid = {}
 logs_list_by_msgid = OrderedDict()
@@ -65,7 +65,7 @@ for line in sys.stdin.buffer:
 
 ## FIXME: Print pending queue logs
 for msgid, logs_list in logs_list_by_msgid.items():
-    print(f"Message-ID: <{msgid}>")
+    print(f"Message-ID: {msgid}")
     for logs in logs_list:
         print(f"  Queue ID: {logs[0]['qid']}")
         for log in logs:
