@@ -20,10 +20,11 @@ fi
 grep ' hold: header ' "$@" \
 |sed -E \
   -e 's/.* hold: header //' \
-  -e 's/ from [^ ]+;( [a-z]+=[^ ]+)*:/\t/' \
-  -e '/^From:/s/ <[^\t]+\t/ | /' \
+  -e 's/ from [-_.A-Za-z0-9]+\[[0-9a-f.:]+\];( [a-z]+=[^ ]+)*: /\t/' \
+  -e '/^From:/s/ <[^\t]+(\.[-_A-Za-z0-9]+)>/ <...@...\1>/' \
   -e '/^List-Unsubscribe:/s/<mailto:[^@>]*@[^.>]*\?[^>]*>/<mailto:...>/' \
   -e 's/(=\?[-_A-Za-z0-9]+\?[BbQq]\?[^?]+\?=)\?+/\1/g' \
+  -e 's/\t/ | /' \
 |(
   if type nkf >/dev/null 2>&1; then
     exec nkf -w
@@ -31,8 +32,6 @@ grep ' hold: header ' "$@" \
     exec cat
   fi
 ) \
-|sed -E \
-  -e 's/[ \t]+/ /g' \
 |sort \
 |uniq -c \
 |sort -nr \
