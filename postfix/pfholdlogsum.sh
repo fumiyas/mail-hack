@@ -17,12 +17,11 @@ elif [ "${1-}" = "-" ]; then
   shift $#
 fi
 
-grep ' hold: header ' "$@" \
+grep -E ' (hold|reject|discard): header ' "$@" \
 |sed -E \
-  -e 's/.* hold: header //' \
-  -e 's/ from [-_.A-Za-z0-9]+\[[0-9a-f.:]+\];( [a-z]+=[^ ]+)*: /\t/' \
-  -e '/^From:/s/ <[^\t]+(\.[-_A-Za-z0-9]+)>/ <...@...\1>/' \
-  -e '/^List-Unsubscribe:/s/<mailto:[^@>]*@[^.>]*\?[^>]*>/<mailto:...>/' \
+  -e 's/.* (hold|reject|discard): header (.*) from [-_.A-Za-z0-9]+\[[0-9a-f.:]+\];( [a-z]+=[^ ]+)*: /\1: \2\t/' \
+  -e '/^[a-z]+: From:/s/ <[^\t]+(\.[-_A-Za-z0-9]+)>/ <...@...\1>/' \
+  -e '/^[a-z]+: List-Unsubscribe:/s/<mailto:[^@>]*@[^.>]*\?[^>]*>/<mailto:...>/' \
   -e 's/(=\?[-_A-Za-z0-9]+\?[BbQq]\?[^?]+\?=)\?+/\1/g' \
   -e 's/\t/ | /' \
 |(
