@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 ##
 ## Postfix: Summarize header_checks(5) hold logs
 ##
