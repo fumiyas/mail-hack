@@ -29,13 +29,22 @@ elif [ "${1-}" = "-" ]; then
   shift $#
 fi
 
-grep -E ' (hold|reject|discard): header ' "$@" \
-|sed -E \
-  -e 's/.* (hold|reject|discard): header (.*) from [-_.A-Za-z0-9]+\[[0-9a-f.:]+\];( [a-z]+=[^ ]+)*: /\1: \2\t/' \
-  -e '/^[a-z]+: From:/s/ <[^\t]+(\.[-_A-Za-z0-9]+)>/ <...@...\1>/' \
-  -e '/^[a-z]+: List-Unsubscribe:/s/<mailto:[^@>]*@[^.>]*\?[^>]*>/<mailto:...>/' \
-  -e 's/(=\?[-_A-Za-z0-9]+\?[BbQq]\?[^?]+\?=)\?+/\1/g' \
-  -e 's/\t/ | /' \
+sed -E -n '
+  s/^[^ ]+ [^ ]+ [^ ]+ [^ ]+ (hold|reject|discard): header (.*) from [-_.A-Za-z0-9]+\[[0-9a-f.:]+\];( [a-z]+=[^ ]+)*: /\1: \2\t/
+  ## Next if no s/// has done
+  T
+  ## Mask local and domain part in e-mail addresses
+  /^[a-z]+: From:/s/ <[^\t]+(\.[-_A-Za-z0-9]+)>/ <...@...\1>/
+  ## Mask e-mail address in URLs
+  /^[a-z]+: List-Unsubscribe:/s/<mailto:[^@>]*@[^.>]*\?[^>]*>/<mailto:...>/
+  ## Remove masked LF and tab in syslog log
+  s/(=\?[-_A-Za-z0-9]+\?[BbQq]\?[^?]+\?=)\?+/\1/g
+  ## Add a separator
+  s/\t/ | /
+  p
+  ' \
+  -- \
+  "$@" \
 |(
   if type nkf >/dev/null 2>&1; then
     exec nkf -w
