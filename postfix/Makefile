@@ -36,10 +36,10 @@ Makefile.database: Makefile main.cf
 	    -e '/^alias_(database|maps) = /d' \
 	    -e 's/^[^=]+= *//' \
 	    -e 's/, */ /g' \
-	    -e '/(lmdb|hash):/p' \
+	    -e '/(lmdb|cdb|hash):/p' \
 	  |tr ' ' '\n' \
 	  |sed -E -n \
-	    -e 's#^(lmdb|hash):(\$$config_directory|$(POSTFIX_CONFIG_DIR))/#\1 $(POSTFIX_CONFIG_DIR)/#p' \
+	    -e 's#^(lmdb|cdb|hash):(\$$config_directory|$(POSTFIX_CONFIG_DIR))/#\1 $(POSTFIX_CONFIG_DIR)/#p' \
 	  |sort -u \
 	  |while read type src; do \
 	    if [ "$$type" = "hash" ]; then \
