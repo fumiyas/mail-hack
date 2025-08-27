@@ -31,7 +31,10 @@ Makefile.database: Makefile main.cf
 	  echo 'POSTMAP=$(POSTMAP)' >>"$$tmp"; \
 	  echo '.PHONY: database' >>"$$tmp"; \
 	  echo 'database::' >>"$$tmp"; \
-	  { $(POSTCONF) -x -c $(POSTFIX_CONFIG_DIR) || kill $$$$; } \
+	  { \
+	    $(POSTCONF) -x -c $(POSTFIX_CONFIG_DIR) || kill $$$$; \
+	    $(POSTCONF) -M -x -c $(POSTFIX_CONFIG_DIR) || kill $$$$; \
+	  } \
 	  |sed -E \
 	    -e '/^alias_(database|maps) = /d' \
 	  |grep -E -o ' (lmdb|cdb|hash):$(POSTFIX_CONFIG_DIR)/[^, ]+' \
