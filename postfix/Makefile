@@ -31,17 +31,12 @@ Makefile.database: Makefile main.cf
 	  echo 'POSTMAP=$(POSTMAP)' >>"$$tmp"; \
 	  echo '.PHONY: database' >>"$$tmp"; \
 	  echo 'database::' >>"$$tmp"; \
-	  { $(POSTCONF) -c $(POSTFIX_CONFIG_DIR) || kill $$$$; } \
-	  |sed -E -n \
+	  { $(POSTCONF) -x -c $(POSTFIX_CONFIG_DIR) || kill $$$$; } \
+	  |sed -E \
 	    -e '/^alias_(database|maps) = /d' \
-	    -e 's/^[^=]+= *//' \
-	    -e 's/, */ /g' \
-	    -e '/(lmdb|cdb|hash):/p' \
-	  |tr ' ' '\n' \
-	  |sed -E -n \
-	    -e 's#^(lmdb|cdb|hash):(\$$config_directory|$(POSTFIX_CONFIG_DIR))/#\1 $(POSTFIX_CONFIG_DIR)/#p' \
+	  |grep -E -o ' (lmdb|cdb|hash):$(POSTFIX_CONFIG_DIR)/[^, ]+' \
 	  |sort -u \
-	  |while read type src; do \
+	  |while IFS=' :' read -r type src; do \
 	    if [ "$$type" = "hash" ]; then \
 	      dst="$$src.db"; \
 	    else \
