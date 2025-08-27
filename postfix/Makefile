@@ -2,11 +2,11 @@
 ##
 ## Postfix: Makefile for updating database files
 ##
-## Copyright (c) 2014-2023 SATOH Fumiyasu @ OSSTech Corp., Japan
-##               <https://github.com/fumiyas/mail-filters/blob/master/postfix/Makefile>
-##               <https://fumiyas.github.io/>
+## SPDX-FileCopyrightText: 2014-2025 SATOH Fumiyasu @ OSSTech Corp., Japan
+## SPDX-License-Identifier: WTFPL
 ##
-## License: Do What The Fuck You Want To Public License (WTFPL) version 2
+## <https://github.com/fumiyas/mail-filters/blob/master/postfix/Makefile>
+## <https://fumiyas.github.io/>
 ##
 
 POSTFIX_CONFIG_DIR=	/etc/postfix
