@@ -27,7 +27,7 @@ log_cleanup_filter_re = re.compile(
     r'^(?P<action>info|hold|reject|discard): '
     r'(?P<targeted>header (?P<header>.*)) '
     r'(?P<proto>from [-.\d\w]+\[[\da-f.:]+\]; from=<.*?> to=<.*?> proto=\S+ helo=<.*?>)'
-    r'(: (?P<message>.*))?$',
+    r'(: (?P<text>.*))?$',
     re.ASCII
 )
 
@@ -72,8 +72,9 @@ for line in sys.stdin.buffer:
         m = log_cleanup_filter_re.match(log['content'])
         if m:
             log['content'] = f"{m['action']}: {m['targeted']}\n{padding}{m['proto']}"
-            if m['message']:
-                log['content'] += f"\n{padding}{m['message']}"
+            if m['text']:
+                ## Optional text
+                log['content'] += f"\n{padding}text: {m['text']}"
     if log['service'] in ('local', 'smtp'):
         log["content"] = re.sub(r", (status=)", f"\n{padding}\\1", log["content"])
     elif log['service'] == 'qmgr' and log['content'] == 'removed':
