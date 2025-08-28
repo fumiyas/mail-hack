@@ -54,7 +54,7 @@ for line in sys.stdin.buffer:
 
     log["line_raw"] = line
 
-    ## Remove decimal point and time zone
+    ## Remove decimal point, fraction and time zone
     log["timestamp"] = re.sub(r"\..+$", "", log["timestamp"])
 
     try:
