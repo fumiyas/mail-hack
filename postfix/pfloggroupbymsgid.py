@@ -71,8 +71,7 @@ for line in sys.stdin.buffer:
             msgid_by_qid[qid] = m['msgid']
         m = log_cleanup_filter_re.match(log['content'])
         if m:
-            action = m['action'].upper() if m['action'] != 'info' else m['action']
-            log['content'] = f"{action}: {m['targeted']}\n{padding}{m['proto']}"
+            log['content'] = f"{m['action']}: {m['targeted']}\n{padding}{m['proto']}"
             if m['message']:
                 log['content'] += f"\n{padding}{m['message']}"
     if log['service'] in ('local', 'smtp'):
@@ -96,8 +95,13 @@ for qid, logs in logs_by_qid.items():
 
 ## FIXME: Print pending queue logs
 for msgid, logs_list in logs_list_by_msgid.items():
-    print(f"Message-ID: {msgid}")
+    print(f"\x1b[32mMessage-ID: {msgid}")
     for logs in logs_list:
-        print(f"  Queue ID: {logs[0]['qid']}")
+        qid = logs[0]['qid']
+        if qid in logs_by_qid:
+            print(f"\x1b[31m", end="")
+        else:
+            print(f"\x1b[35m", end="")
+        print(f"  Queue ID: {qid}")
         for log in logs:
-            print(f"    {log['timestamp']} {log['service']} {log['content']}")
+            print(f"    \x1b[34m{log['timestamp']}\x1b[m {log['service']} {log['content']}")
