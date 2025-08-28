@@ -3,7 +3,7 @@
 ##
 ## Postfix: Group Postfix log by Message-ID: header
 ##
-## SPDX-FileCopyrightText: 2018-2024 SATOH Fumiyasu @ OSSTech Corp., Japan
+## SPDX-FileCopyrightText: 2018-2025 SATOH Fumiyasu @ OSSTech Corp., Japan
 ## SPDX-License-Identifier: GPL-3.0-or-later
 ##
 
