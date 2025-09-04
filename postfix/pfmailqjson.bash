@@ -24,10 +24,15 @@ if [[ $# -lt 1 || $# -gt 2 ]]; then
   echo "\
 Usage: ${0##*/} QUEUE_NAME [AGE]
 
-QUEUE_NAME
-  all, hold, incoming, active or deferred
-AGE
-  List only queues older than the number of days
+Arguments:
+  QUEUE_NAME
+    all, hold, incoming, active or deferred
+  AGE
+    List only queues older than the number of days
+
+Example:
+  Remove old (> 90 days) mails in the Postfix hold queue:
+    ${0##*/} hold 90 |jq -r .queue_id |/usr/sbin/postsuper -d -
 "
   exit 1
 fi
