@@ -9,6 +9,8 @@
 set -u
 set -o pipefail || exit $?  # bash 3.0+
 
+export PATH="$PATH:/usr/bin:/usr/sbin"
+
 perr() {
   echo "$0: ERROR: $1" 1>&2
 }
