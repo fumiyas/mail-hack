@@ -1,8 +1,8 @@
 #!/bin/bash
 ##
-## Postfix: Summarize header_checks(5) hold logs
+## Postfix: Summarize header_checks(5) filtered mail logs
 ##
-## SPDX-FileCopyrightText: 2018-2024 SATOH Fumiyasu @ OSSTech Corp., Japan
+## SPDX-FileCopyrightText: 2025 SATOH Fumiyasu @ OSSTech Corp., Japan
 ## SPDX-License-Identifier: GPL-3.0-or-later
 ##
 
@@ -40,10 +40,9 @@ sed -E -n '
   /^[a-z]+: From:/s/ <[^\t]+(\.[-_A-Za-z0-9]+)>/ <...@...\1>/
   ## Mask e-mail address in URLs
   /^[a-z]+: List-Unsubscribe:/s/<mailto:[^@>]*@[^.>]*\?[^>]*>/<mailto:...>/
-  ## Remove masked LF and tab in syslog log
+  ## Remove `?` that are masked LF and tab in syslog log
   s/(=\?[-_A-Za-z0-9]+\?[BbQq]\?[^?]+\?=)\?+/\1/g
   ## Add a separator
-  s/\t/ | /
   p
   ' \
   -- \
@@ -56,7 +55,8 @@ sed -E -n '
   fi
 ) \
 |sed -E \
-  -e "s/([$u_space$u_combining])/[\1]/g" \
+  -e "s/([$u_space$u_combining])[^\t]*/[\1].../g" \
+  -e 's/\t/ | /' \
 |sort \
 |uniq -c \
 |sort -nr \
