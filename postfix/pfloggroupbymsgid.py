@@ -100,9 +100,9 @@ for msgid, logs_list in logs_list_by_msgid.items():
     for logs in logs_list:
         qid = logs[0]['qid']
         if qid in logs_by_qid:
-            print(f"\x1b[31m", end="")
+            print("\x1b[31m", end="")
         else:
-            print(f"\x1b[35m", end="")
+            print("\x1b[35m", end="")
         print(f"  Queue ID: {qid}")
         for log in logs:
             print(f"    \x1b[34m{log['timestamp']}\x1b[m {log['service']} {log['content']}")
