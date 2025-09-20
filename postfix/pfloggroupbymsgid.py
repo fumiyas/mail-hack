@@ -11,6 +11,14 @@ import sys
 import re
 from collections import OrderedDict
 
+c_reset = "\x1b[m"
+c_red = "\x1b[31m"
+c_green = "\x1b[32m"
+c_yellow = "\x1b[33m"
+c_blue = "\x1b[34m"
+c_magenta = "\x1b[35m"
+c_cyan = "\x1b[36m"
+
 log_raw_re = re.compile(
     rb'^'
     rb'(?P<timestamp>\d{4}-[0-1]\d-[0-3]\dT[0-1]\d:[0-5]\d:[0-5]\d(\.\d+)?[-+][0-1]\d:[0-5]\d|[A-Z][a-z][a-z] [ 1-3]\d [0-1]\d:[0-5]\d:[0-5]\d) '
@@ -71,7 +79,13 @@ for line in sys.stdin.buffer:
             msgid_by_qid[qid] = m['msgid']
         m = log_cleanup_filter_re.match(log['content'])
         if m:
-            log['content'] = f"{m['action']}: {m['targeted']}\n{padding}{m['proto']}"
+            if m['action'] in ('hold'):
+                c = c_yellow
+            elif m['action'] in ('reject', 'discard'):
+                c = c_red
+            else:
+                c = ""
+            log['content'] = f"{c}{m['action']}{c_reset}: {m['targeted']}\n{padding}{m['proto']}"
             if m['text']:
                 ## Optional text
                 log['content'] += f"\n{padding}text: {m['text']}"
@@ -96,13 +110,13 @@ for qid, logs in logs_by_qid.items():
 
 ## FIXME: Print pending queue logs
 for msgid, logs_list in logs_list_by_msgid.items():
-    print(f"\x1b[32mMessage-ID: {msgid}")
+    print(f"{c_green}Message-ID: {msgid}")
     for logs in logs_list:
         qid = logs[0]['qid']
         if qid in logs_by_qid:
-            print("\x1b[31m", end="")
+            print(c_red, end="")
         else:
-            print("\x1b[35m", end="")
+            print(c_magenta, end="")
         print(f"  Queue ID: {qid}")
         for log in logs:
-            print(f"    \x1b[34m{log['timestamp']}\x1b[m {log['service']} {log['content']}")
+            print(f"    {c_cyan}{log['timestamp']}{c_reset} {log['service']} {log['content']}")
