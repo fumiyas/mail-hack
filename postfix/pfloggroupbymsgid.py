@@ -34,7 +34,7 @@ log_cleanup_msgid_re = re.compile(
 log_cleanup_filter_re = re.compile(
     r'^(?P<action>info|hold|reject|discard): '
     r'(?P<targeted>header (?P<header>.*)) '
-    r'(?P<proto>from [-.\d\w]+\[[\da-f.:]+\]; from=<.*?> to=<.*?> proto=\S+ helo=<.*?>)'
+    r'(?P<client>from [-.\d\w]+\[[\da-f.:]+\]); (?P<from_to>from=<.*?> to=<.*?>) (?P<proto>proto=\S+ helo=<.*?>)'
     r'(: (?P<text>.*))?$',
     re.ASCII
 )
@@ -85,12 +85,13 @@ for line in sys.stdin.buffer:
                 c = c_red
             else:
                 c = ""
-            log['content'] = f"{c}{m['action']}{c_reset}: {m['targeted']}\n{padding}{m['proto']}"
+            log['content'] = f"{c}{m['action']}{c_reset}: {m['targeted']}"
             if m['text']:
                 ## Optional text
                 log['content'] += f"\n{padding}text: {m['text']}"
+            log['content'] += f"\n{padding}{m['from_to']}\n{padding}{m['client']} {m['proto']}"
     if log['service'] in ('local', 'smtp'):
-        log["content"] = re.sub(r", (status=)", f"\n{padding}\\1", log["content"])
+        log["content"] = re.sub(r", ((relay|status)=)", f"\n{padding}\\1", log["content"])
     elif log['service'] == 'qmgr' and log['content'] == 'removed':
         if qid in msgid_by_qid:
             msgid = msgid_by_qid[qid]
