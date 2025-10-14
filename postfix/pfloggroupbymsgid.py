@@ -18,6 +18,7 @@ c_yellow = "\x1b[33m"
 c_blue = "\x1b[34m"
 c_magenta = "\x1b[35m"
 c_cyan = "\x1b[36m"
+pad = " "
 
 log_raw_re = re.compile(
     rb'^'
@@ -38,8 +39,6 @@ log_cleanup_filter_re = re.compile(
     r'(: (?P<text>.*))?$',
     re.ASCII
 )
-
-padding = " " * 24
 
 logs_by_qid = {}
 logs_list_by_msgid = OrderedDict()
@@ -88,10 +87,10 @@ for line in sys.stdin.buffer:
             log['content'] = f"{c}{m['action']}{c_reset}: {m['targeted']}"
             if m['text']:
                 ## Optional text
-                log['content'] += f"\n{padding}text: {m['text']}"
-            log['content'] += f"\n{padding}{m['from_to']}\n{padding}{m['client']} {m['proto']}"
+                log['content'] += f"\n{pad:<9}text: {m['text']}"
+            log['content'] += f"\n{pad:<9}{m['from_to']}\n{pad:<9}{m['client']} {m['proto']}"
     if log['service'] in ('local', 'smtp'):
-        log["content"] = re.sub(r", ((relay|status)=)", f"\n{padding}\\1", log["content"])
+        log["content"] = re.sub(r", ((relay|status)=)", f"\n{pad:<9}\\1", log["content"])
     elif log['service'] == 'qmgr' and log['content'] == 'removed':
         if qid in msgid_by_qid:
             msgid = msgid_by_qid[qid]
