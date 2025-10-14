@@ -21,7 +21,7 @@ c_cyan = "\x1b[36m"
 
 log_raw_re = re.compile(
     rb'^'
-    rb'(?P<timestamp>\d{4}-[0-1]\d-[0-3]\dT[0-1]\d:[0-5]\d:[0-5]\d(\.\d+)?[-+][0-1]\d:[0-5]\d|[A-Z][a-z][a-z] [ 1-3]\d [0-1]\d:[0-5]\d:[0-5]\d) '
+    rb'(?P<timestamp>\d{4}-[0-1]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d(\.\d+)?[-+][0-1]\d:[0-5]\d|[A-Z][a-z][a-z] [ 1-3]\d [0-2]\d:[0-5]\d:[0-5]\d) '
     rb'(?P<hostname>[-.\d\w]+) '
     rb'postfix/(?:(?P<service_prefix>[-.\d\w]+/)?(?P<service>[-.\d\w]+))\[(?P<pid>\d+)\]: '
     rb'(?:(?P<qid>[0-9A-F]{6,}|[0-9B-DF-HJ-NP-TV-Zb-df-hj-np-tv-y]{10,}z[0-9B-DF-HJ-NP-TV-Zb-df-hj-np-tv-y]+): )(?P<content_raw>.*)$',
