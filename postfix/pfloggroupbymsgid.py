@@ -76,6 +76,8 @@ for line in sys.stdin.buffer:
         m = log_cleanup_msgid_re.match(log['content'])
         if m:
             msgid_by_qid[qid] = m['msgid']
+            logs_by_qid[qid].pop()
+            continue
         m = log_cleanup_filter_re.match(log['content'])
         if m:
             if m['action'] in ('hold'):
@@ -89,7 +91,7 @@ for line in sys.stdin.buffer:
                 ## Optional text
                 log['content'] += f"\n{pad:<9}text: {m['text']}"
             log['content'] += f"\n{pad:<9}{m['from_to']}\n{pad:<9}{m['client']} {m['proto']}"
-    if log['service'] in ('local', 'smtp'):
+    elif log['service'] in ('local', 'smtp'):
         log["content"] = re.sub(r", ((relay|status)=)", f"\n{pad:<9}\\1", log["content"])
     elif log['service'] == 'qmgr' and log['content'] == 'removed':
         if qid in msgid_by_qid:
