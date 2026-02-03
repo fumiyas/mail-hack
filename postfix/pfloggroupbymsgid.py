@@ -119,9 +119,11 @@ for msgid, logs_list in logs_list_by_msgid.items():
     for logs in logs_list:
         qid = logs[0]['qid']
         if qid in logs_by_qid:
-            print(c_red, end="")
+            s = 'Pending'
+            c = c_red
         else:
-            print(c_magenta, end="")
-        print(f"  Queue ID: {qid}")
+            s = 'Finished'
+            c = c_magenta
+        print(f"  {c}Queue ID: {qid} ({s})")
         for log in logs:
             print(f"    {c_cyan}{log['timestamp']}{c_reset} {log['service']} {log['content']}")
