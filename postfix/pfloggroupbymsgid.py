@@ -96,7 +96,7 @@ for line in sys.stdin.buffer:
         log["content"] = re.sub(r", ((relay|status)=)", f"\n{pad:<9}\\1", log["content"])
     elif log['service'] == 'qmgr' and log['content'] == 'removed':
         if qid in msgid_by_qid:
-            msgid = msgid_by_qid[qid]
+            msgid = msgid_by_qid.pop(qid)
         else:
             msgid_unknown_count += 1
             msgid = f"UNKNOWN-MESSAGE-ID-{msgid_unknown_count}"
