@@ -76,6 +76,7 @@ for line in sys.stdin.buffer:
         m = log_cleanup_msgid_re.match(log['content'])
         if m:
             msgid_by_qid[qid] = m['msgid']
+            ## Remove the redundant `cleanup message-id=<...>` log
             logs_by_qid[qid].pop()
             continue
         m = log_cleanup_filter_re.match(log['content'])
