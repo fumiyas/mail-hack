@@ -94,7 +94,10 @@ for line in sys.stdin.buffer:
             log['content'] += f"\n{pad:<9}{m['from_to']}\n{pad:<9}{m['client']} {m['proto']}"
     elif log['service'] in ('local', 'smtp'):
         log["content"] = re.sub(r", ((relay|status)=)", f"\n{pad:<9}\\1", log["content"])
-    elif log['service'] == 'qmgr' and log['content'] == 'removed':
+    elif (
+        (log['service'] == 'qmgr' and log['content'] == 'removed') or
+        (log['service'] == 'postsuper' and log['content'] == 'requeued')
+    ):
         if qid in msgid_by_qid:
             msgid = msgid_by_qid.pop(qid)
         else:
@@ -109,9 +112,8 @@ for qid, logs in logs_by_qid.items():
     if msgid is None:
         msgid_unknown_count += 1
         msgid = f"UNKNOWN-MESSAGE-ID-{msgid_unknown_count}"
-    logs_list_by_msgid[msgid] = [logs]
+    logs_list_by_msgid.setdefault(msgid, []).append(logs)
 
-## FIXME: Print pending queue logs
 for msgid, logs_list in logs_list_by_msgid.items():
     print(f"{c_green}Message-ID: {msgid}")
     for logs in logs_list:
