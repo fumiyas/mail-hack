@@ -29,7 +29,7 @@ log_raw_re = re.compile(
     re.ASCII
 )
 log_cleanup_msgid_re = re.compile(
-    r'^message-id=(?P<msgid><.*>)$',
+    r'^message-id=(?P<msgid>[^\s]*)$',
     re.ASCII
 )
 log_cleanup_filter_re = re.compile(
