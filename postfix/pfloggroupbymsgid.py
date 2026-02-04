@@ -96,7 +96,7 @@ for line in sys.stdin.buffer:
         log["content"] = re.sub(r", ((relay|status)=)", f"\n{pad:<9}\\1", log["content"])
     elif (
         (log['service'] == 'qmgr' and log['content'] == 'removed') or
-        (log['service'] == 'postsuper' and log['content'] == 'requeued')
+        (log['service'] == 'postsuper' and log['content'] in ('requeued', 'removed', 'expired'))
     ):
         if qid in msgid_by_qid:
             msgid = msgid_by_qid.pop(qid)
