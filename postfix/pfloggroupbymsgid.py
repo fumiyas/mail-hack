@@ -24,7 +24,7 @@ log_raw_re = re.compile(
     rb'^'
     rb'(?P<timestamp>\d{4}-[0-1]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d(\.\d+)?[-+][0-1]\d:[0-5]\d|[A-Z][a-z][a-z] [ 1-3]\d [0-2]\d:[0-5]\d:[0-5]\d) '
     rb'(?P<hostname>[-.\d\w]+) '
-    rb'postfix/(?:(?P<service_prefix>[-.\d\w]+/)?(?P<service>[-.\d\w]+))\[(?P<pid>\d+)\]: '
+    rb'postfix(?:-(?P<instance_name>[-.\d\w]+))?/(?:(?P<service_prefix>[-.\d\w]+)/)?(?P<service>[-.\d\w]+)\[(?P<pid>\d+)\]: '
     rb'(?P<content_raw>.*)'
     rb'$',
     re.ASCII
@@ -161,4 +161,9 @@ for msgid, logs_list in logs_list_by_msgid.items():
             c = c_magenta
         print(f"  {c}Queue ID: {qid} ({s})")
         for log in logs:
-            print(f"    {c_cyan}{log['timestamp']}{c_reset} {log['service']} {log['content']}")
+            extra = ''
+            if instance_name := log.get('instance_name'):
+                extra += f"{instance_name}/"
+            if service_prefix := log.get('service_prefix'):
+                extra += f"{service_prefix}/"
+            print(f"    {c_cyan}{log['timestamp']}{c_reset} {extra}{log['service']} {log['content']}")
