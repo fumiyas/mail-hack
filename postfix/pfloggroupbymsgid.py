@@ -3,7 +3,7 @@
 ##
 ## Postfix: Group Postfix log by Message-ID: header and queue ID
 ##
-## SPDX-FileCopyrightText: 2018-2025 SATOH Fumiyasu @ OSSTech Corp., Japan
+## SPDX-FileCopyrightText: 2018-2026 SATOH Fumiyasu @ OSSTech Corp., Japan
 ## SPDX-License-Identifier: GPL-3.0-or-later
 ##
 
@@ -25,18 +25,43 @@ log_raw_re = re.compile(
     rb'(?P<timestamp>\d{4}-[0-1]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d(\.\d+)?[-+][0-1]\d:[0-5]\d|[A-Z][a-z][a-z] [ 1-3]\d [0-2]\d:[0-5]\d:[0-5]\d) '
     rb'(?P<hostname>[-.\d\w]+) '
     rb'postfix/(?:(?P<service_prefix>[-.\d\w]+/)?(?P<service>[-.\d\w]+))\[(?P<pid>\d+)\]: '
-    rb'(?:(?P<qid>[0-9A-F]{6,}|[0-9B-DF-HJ-NP-TV-Zb-df-hj-np-tv-y]{10,}z[0-9B-DF-HJ-NP-TV-Zb-df-hj-np-tv-y]+): )(?P<content_raw>.*)$',
+    rb'(?P<content_raw>.*)'
+    rb'$',
     re.ASCII
 )
+
+qid_re = r'(?P<qid>[0-9A-F]{6,}|[0-9B-DF-HJ-NP-TV-Zb-df-hj-np-tv-y]{10,}z[0-9B-DF-HJ-NP-TV-Zb-df-hj-np-tv-y]+)'
+log_q_re = re.compile(
+    r'^'
+    f"{qid_re}"
+    ': (?P<content_raw>.*)'
+    r'$',
+    re.ASCII
+)
+log_q_warning_re = re.compile(
+    r'^'
+    ## FIXME: Handle `error`, `fatal` messages
+    r'warning: '
+    ## FIXME: No standard format :-(
+    r'(open [a-z]+|[_a-z][_a-z0-9]+: remove) '
+    f"{qid_re}"
+    ,
+    re.ASCII
+)
+
 log_cleanup_msgid_re = re.compile(
-    r'^message-id=(?P<msgid>[^\s]*)$',
+    r'^'
+    r'message-id=(?P<msgid>[^\s]*)'
+    r'$',
     re.ASCII
 )
 log_cleanup_filter_re = re.compile(
-    r'^(?P<action>info|hold|reject|discard): '
+    r'^'
+    r'(?P<action>info|hold|reject|discard): '
     r'(?P<targeted>header (?P<header>.*)) '
     r'(?P<client>from [-.\d\w]+\[[\da-f.:]+\]); (?P<from_to>from=<.*?> to=<.*?>) (?P<proto>proto=\S+ helo=<.*?>)'
-    r'(: (?P<text>.*))?$',
+    r'(: (?P<text>.*))?'
+    r'$',
     re.ASCII
 )
 
@@ -68,6 +93,16 @@ for line in sys.stdin.buffer:
         log["content"] = m["content_raw"].decode()
     except UnicodeDecodeError:
         log["content"] = f"{m['content_raw']!r}"
+
+    m = log_q_re.match(log["content"])
+    if m:
+        log["qid"] = m["qid"]
+        log["content"] = m["content_raw"]
+    else:
+        m = log_q_warning_re.match(log["content"])
+        if not m:
+            continue  # FIXME: Warn?
+        log["qid"] = m["qid"]
     qid = log["qid"]
 
     logs_by_qid.setdefault(qid, []).append(log)
