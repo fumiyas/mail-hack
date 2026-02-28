@@ -30,7 +30,7 @@ log_raw_re = re.compile(
     re.ASCII
 )
 
-qid_re = r'(?P<qid>[0-9A-F]{6,}|[0-9B-DF-HJ-NP-TV-Zb-df-hj-np-tv-y]{10,}z[0-9B-DF-HJ-NP-TV-Zb-df-hj-np-tv-y]+)'
+qid_re = r'(?P<qid>[0-9A-F]{6,}|[0-9B-DF-HJ-NP-TV-Zb-df-hj-np-tv-z]{10,}z[0-9B-DF-HJ-NP-TV-Zb-df-hj-np-tv-z]+)'
 log_q_re = re.compile(
     r'^'
     f"{qid_re}"
